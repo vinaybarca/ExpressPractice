@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
-import logo from './logo.svg';
+
 import './App.css';
-import { Button, NavItem } from 'react-bootstrap';
+
 
 
 
@@ -15,7 +15,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: [],
+      data: [], //will store emails to display current email before the user updates
       isActive: false,
       users: [],
       firstname: '',
@@ -33,30 +33,21 @@ class App extends Component {
 
 
   componentDidMount() {
-
-
-    /*
-     this.callBackendAPI()
-      .then(res => 
-        this.setState({ data: res.express })
-        
-      )
-      .catch(err => console.log(err));
-      **/
-
     this.callAPI()
       .then((res2) => {
-        if(res2.length == 0){
-              res2.push({"firstname":'Database Empty, create a user',
-              "lastname":' ',
-              "username":' ',
-              "email":' '})
-              var emailHolder = [];
-        res2.map((emails) => {
-          emailHolder.push(emails.email)
-        })
-        this.setState({ users: res2, data: emailHolder })
-        } else{
+        if (res2.length == 0) {
+          res2.push({
+            "firstname": 'Database Empty, create a user',
+            "lastname": ' ',
+            "username": ' ',
+            "email": ' '
+          })
+          var emailHolder = [];
+          res2.map((emails) => {
+            emailHolder.push(emails.email)
+          })
+          this.setState({ users: res2, data: emailHolder })
+        } else {
           var emailHolder = [];
           res2.map((emails) => {
             emailHolder.push(emails.email)
@@ -76,26 +67,28 @@ class App extends Component {
   componentDidUpdate() {
     this.callAPI()
       .then((res2) => {
-        if(res2.length == 0){
-          res2.push({'firstname':'Database Empty, create a user',
-          'lastname':' ',
-          'username':' ',
-          'email':' '})
+        if (res2.length == 0) {
+          res2.push({
+            'firstname': 'Database Empty, create a user',
+            'lastname': ' ',
+            'username': ' ',
+            'email': ' '
+          })
           var emailHolder = [];
-    res2.map((emails) => {
-      emailHolder.push(emails.email)
-    })
-    this.setState({ users: res2, data: emailHolder })
-    } else{
-      if (this.state.change == true) {
-        var emailHolder = [];
-        res2.map((emails) => {
-          emailHolder.push(emails.email)
-        })
-        this.setState({ users: res2, data: emailHolder })
-      } 
-    }
-        
+          res2.map((emails) => {
+            emailHolder.push(emails.email)
+          })
+          this.setState({ users: res2, data: emailHolder })
+        } else {
+          if (this.state.change == true) {
+            var emailHolder = []; //stores the current email
+            res2.map((emails) => {
+              emailHolder.push(emails.email)
+            })
+            this.setState({ users: res2, data: emailHolder })
+          }
+        }
+
 
       })
       .catch(error => console.log(error));
@@ -132,7 +125,7 @@ class App extends Component {
 
       item.email = event.target.value;
       update[type].email = item.email;
-
+        
       this.setState({ users: update, change: false })
 
     }
@@ -256,16 +249,15 @@ class App extends Component {
 
       const fetchResponse = await fetch(upD, config);
       const data2 = await fetchResponse.json();
-
+        
 
     } catch (e) {
-      return e;
+      alert(e);
     }
   }
 
 
-  //<p className="App-intro">{this.state.data.map(data => <div>{data.id + ':' + data.name}</div>)}
-  //</p>
+
 
   setIsActive = (active) => {
     this.setState({ isActive: active })
@@ -274,6 +266,7 @@ class App extends Component {
 
 
   render() {
+    
     return (
       <div className="App">
         <header className="App-header">
@@ -283,73 +276,89 @@ class App extends Component {
         </header>
         <div className="creategrid">
           <div className="newUser">
-            <form onSubmit={this.handleSubmit}>
-              <label>Add new account </label>
+            <form>
+              <h1>Add new account </h1>
               <label>
                 First Name:
-                <textarea value={this.state.firstname} onChange={(value, type) => this.handleChange(value, 'firstname')} />
+                <input value={this.state.firstname} onChange={(value, type) => this.handleChange(value, 'firstname')} />
               </label>
               <label>
                 Last Name:
-                <textarea value={this.state.lastname} onChange={(value, type) => this.handleChange(value, 'lastname')} />
+                <input value={this.state.lastname} onChange={(value, type) => this.handleChange(value, 'lastname')} />
               </label>
               <label>
                 Username:
-                <textarea value={this.state.username} onChange={(value, type) => this.handleChange(value, 'username')} />
+                <input value={this.state.username} onChange={(value, type) => this.handleChange(value, 'username')} />
               </label>
               <label>
                 email:
-                <textarea value={this.state.email} onChange={(value, type) => this.handleChange(value, 'email')} />
+                <input value={this.state.email} onChange={(value, type) => this.handleChange(value, 'email')} />
               </label>
-              <input type="submit" value="Submit" />
+              
+              <button onClick={this.handleSubmit}>CREATE</button>
+
             </form>
           </div>
-          <div className="infogrid">
+
+
+
+          <table>
+            <colgroup span="5" ></colgroup>
+
+            <tr>
+              <th >Name</th>
+              <th  >Email</th>
+              <th  >Username</th>
+              <th  >update email</th>
+              <th  >Delete</th>
+
+            </tr>
 
             {
+
               this.state.users.map((item, i) =>
 
 
-                <div className="App-database">
-                  <div className="App-database-item">
-                    <div className="database-title">
-                      <div className="App-database-content">
-                        <h1 className="App-menu-header"> {item.firstname} {item.lastname} </h1>
-                        
-                       
-                        {this.state.users[0].lastname !== ' ' && 
-                        
-                        <div className="App-database-update">
-                          <li  >
-                          Username = {item.username} </li>
-                        <li>Email = {this.state.data[this.state.users.indexOf(item)]}</li>
-                        <form onSubmit={(event, index) => this.handleUpdate(event, this.state.users.indexOf(item))}>
 
-                          <label> Update Email for a  User</label>
-                          <textarea
-                            placeholder={item.email}
-                            value={this.state.users[this.state.users.indexOf(item)].email}
-                            onChange={(value, type) => this.handleChange(value, this.state.users.indexOf(item))}
-                          />
+                <tr>
 
-                          <input type="submit" value="Submit" />
-                        </form>
-                        <button onClick={(value) => this.handleDelete(item.id)}>Delete user</button>
-
-                      </div>
-                        
-                        }
-                      
-                      
-                      </div>
-                    </div>
+                  <td>{item.firstname} {item.lastname}</td>
+                  <td>{this.state.data[this.state.users.indexOf(item)]}</td>
+                  <td>{item.username}</td>
 
 
-                  </div>
-                </div>
+                  <td key={i}>
+
+
+                    <form >
+
+                      <input
+                        placeholder={item.email}
+                        value={(this.state.users[this.state.users.indexOf(item)].email === this.state.data[this.state.users.indexOf(item)] ) ? '' : this.state.users[this.state.users.indexOf(item)].email}
+                        onChange={(value, type) => this.handleChange(value, this.state.users.indexOf(item))}
+                      />
+
+                      <button onClick={(event, index) => this.handleUpdate(event, this.state.users.indexOf(item))}>UPDATE</button>
+
+                    </form>
+                  
+                  </td>
+                          
+                  <td>
+                    <button onClick={(value) => this.handleDelete(item.id)}>Delete user</button>
+                  </td>
+                </tr>
+
+
+
+
+
+
               )
+
             }
-          </div>
+          </table>
+
 
         </div>
       </div>

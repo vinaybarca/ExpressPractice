@@ -1,9 +1,9 @@
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: 'me',
+  user: 'newuser',
   host: 'localhost',
-  database: 'api',
-  password: 'password',
+  database: 'tester',
+  password: '1234',
   port: 5432,
 })
 
@@ -11,7 +11,7 @@ const pool = new Pool({
   module.exports = {
     getUsers : function (request, response) {
       
-      pool.query('SELECT * FROM newusers ORDER BY id DESC', (error, results) => {
+      pool.query('SELECT * FROM users ORDER BY id DESC', (error, results) => {
         if (error) {
          
           throw error
@@ -28,10 +28,9 @@ const pool = new Pool({
     },
   
      createUser : function (request, response)  {
-      console.log(request.body )
       const { firstname,lastname,username, email } = request.body
       
-      pool.query('INSERT INTO newusers (firstname,lastname,username, email) VALUES ($1, $2, $3, $4)', 
+      pool.query('INSERT INTO users (firstname,lastname,username, email) VALUES ($1, $2, $3, $4)', 
       [firstname,lastname,username, email], (error, results) => {
         if (error) {
           throw error
@@ -44,9 +43,8 @@ const pool = new Pool({
       const id =request.params.id
       const { email } = request.body
      
-      console.log(request.body)
       pool.query(
-        'UPDATE newusers SET email = $1 WHERE id='+id,
+        'UPDATE users SET email = $1 WHERE id='+id,
         [email],
         (error, results) => {
           if (error) {
@@ -62,11 +60,10 @@ const pool = new Pool({
   
      deleteUser : function (request, response)  {
       
-      console.log(request.params.id)
       
       const id = request.params.id
 
-      pool.query('DELETE FROM newusers WHERE id =' + id,  (error, results) => {
+      pool.query('DELETE FROM users WHERE id =' + id,  (error, results) => {
         if (error) {
           throw error
         }
@@ -77,8 +74,7 @@ const pool = new Pool({
     },
      getUserById : function (request, response)  {
       const id = parseInt(request.params.id)
-        console.log(id);
-      pool.query('SELECT * FROM newusers WHERE id = $1', [id], (error, results) => {
+      pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
         if (error) {
           throw error
         }

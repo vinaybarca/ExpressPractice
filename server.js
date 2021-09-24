@@ -1,11 +1,10 @@
-const express = require('express'); //Line 1
-const app = express(); //Line 2
+const express = require('express'); 
+const app = express(); 
 const bodyParser = require('body-parser')
 const db = require('./postgresData')
 const port = 5000;
-
-// This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`)); //Line 6
+const router = express.Router();
+app.listen(port, () => console.log(` ${port}`)); 
 
 
 app.use(bodyParser.json())
@@ -15,27 +14,9 @@ app.use(
   })
 )
 
-// create a GET route
 
-/*
-app.get('/express_backend', (req, res) => { //Line 9
-  res.send({ express: 'YOUR  BACKEND IS CONNECTED TO REACT' }); //Line 10
-}); //Line 11
-
-
-
-app.get('/menu', (req, res) => {
-    const {context} = req;
-    let results = [];
-    
-        results = recipes
-   
-    res.send({express: recipes
-    });
-    
-})**/
-
-app.get('/users',db.getUsers); 
+//server calls that route to the database functions
+app.get('/users',db.getUsers);  //route that lists all the users (http://localhost:5000/users to see the raw array of users) 
 app.get('/users/:id', db.getUserById); 
 app.post('/users', db.createUser);
 app.put('/users/:id', db.updateUser);
