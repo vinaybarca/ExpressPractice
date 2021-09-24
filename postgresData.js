@@ -51,7 +51,7 @@ const pool = new Pool({
             throw error
           }
           
-          response.status(200).send(`User modified with ID: ${id}`)
+          response.status(200).send(`ID: ${id}`)
 
          
         }
@@ -67,19 +67,10 @@ const pool = new Pool({
         if (error) {
           throw error
         }
-        response.status(201).send(`User deleted with ID: ${id}`)
+        response.status(201).send(`deleted ID: ${id}`)
       })
 
       
     },
-     getUserById : function (request, response)  {
-      const id = parseInt(request.params.id)
-      pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-        if (error) {
-          throw error
-        }
-        response.status(200).json(results.rows)
-      })
-    }
     
   }
